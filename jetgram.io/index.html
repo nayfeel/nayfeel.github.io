@@ -1,0 +1,1782 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Jetgram - игра</title>
+	<meta name="description" content="Jetgram - игровой бот, игра Jetgram"/>
+	<meta name="keywords" content="Jetgram, джетграм, джетаграм, играть в jetgram, бот джетграм">
+	
+	<link rel="icon" href="https://jetgram.io/dist/favicon.png" />
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<!-- <style>body{opacity: 0;}</style> -->
+	<link rel="stylesheet" href="jetgram_UI/css/style.css@2.css">
+    <script src="game/jquery.min.js" crossorigin="anonymous"></script>
+	
+	<!-- <meta name="robots" content="noindex, nofollow"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+
+<body>
+	<div class="wrapper">
+		<main class="page">
+			<div class="page__container">
+				<header class="header">
+					<div class="header__top">
+						<div class="header-balance">
+							<picture><source srcset="/assets/jetgram_UI/img/icons/balance.webp" type="image/webp"><img class="header-balance__icon" src="jetgram_UI/img/icons/balance.png" alt=""></picture>
+							<span class="header-balance__sum "><span class='user_balance' >0</span> &nbsp; rub </span>
+							<picture><source srcset="/assets/jetgram_UI/img/icons/balance-open-menu.webp" type="image/webp"><img class="header-balance__open" src="jetgram_UI/img/icons/balance-open-menu.png" alt=""></picture>
+							
+														<div class="header-balance__menu" style='z-index: 500'>
+								<h5 style='color: #000; text-align:center; padding: 15px;'>DEMO-РЕЖИМ</h5>
+							</div>
+														
+							
+						</div>
+						<div class="header-actions">
+						
+							<a href="https://jetgram.io/account/" class="header-actions__settings"><img src="img/demo_user.png" alt="" style='border-radius: 50%'/></a>
+							
+							<div class="header-actions__volume _muted " id='js-disable-sound'>
+								<picture><source srcset="/assets/jetgram_UI/img/icons/sound-off.webp" type="image/webp"><img class="volume-off-icon" src="jetgram_UI/img/icons/sound-off.png" alt="иконка"></picture>
+								<picture><source srcset="/assets/jetgram_UI/img/icons/sound-on.webp" type="image/webp"><img class="volume-on-icon" src="jetgram_UI/img/icons/sound-on.png" alt="иконка"></picture>
+							</div>
+							<button type="button" class="header-actions__info"><picture><source srcset="/assets/jetgram_UI/img/icons/info.webp" type="image/webp"><img src="jetgram_UI/img/icons/info.png" alt="иконка"></picture></button>
+							<div class="header-actions__gameinfo" style='z-index: 300'>
+								<div class="header-actions__gameinfo-item">
+									<h3>Номер игры</h3>
+									<p class='now_ID'>...</p>
+								</div>
+								<div class="header-actions__gameinfo-item">
+									<h3>Хеш</h3>
+									<div class="header-actions__gameinfo-clipboard">
+										<p class="header-actions__gameinfo-clipboard-text now_HASH" style='border-bottom: 1px dashed; cursor: pointer'>...</p>
+										<!-- <button type="button" class="header-actions__gameinfo-clipboard-button">копировать</button> -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="header__bottom last-games">
+						<div class="last-games__body js-last-coefficients"></div>
+					</div>
+				</header>
+				
+				<div class="page__game-screen game-screen">
+					<div class="game-screen__players" style='z-index:200 '>
+						<button type="button" class="game-screen__players-btn button"><span>Свернуть</span><picture><source srcset="/assets/jetgram_UI/img/icons/return-icon.webp" type="image/webp"><img src="jetgram_UI/img/icons/return-icon.png" alt=" "></picture></button>
+						
+						<ul class="game-screen__players-list" id='js-stake-list' style='padding-top: 9px'></ul>
+						
+					</div>
+					<div id="aviator" class="game-screen__aviator"></div>
+					<div id="aviator_above"  style='background:  #000; position: absolute; width: 100%; height: 100%; z-index: 12; display: none'></div>
+				</div>
+				<footer class="footer">
+					<div class="footer__actions actions-game" id='actions_panel'>
+					
+						<div id='bet_block_1' class="actions-game__top actions-game-rates">
+							<div class="actions-game-rates__input">
+								<input onkeyup="this.value = this.value.replace(/[^\d,.]/g, '');" inputmode="decimal" type="text" placeholder="" class="input"  value="100" id='bet_input_1' />
+								<button  type="button" class="actions-game-rates__input-button btn-coe" value="MAX">MAX</button>
+								<button data-quantity-button="50" type="button" class="actions-game-rates__input-button ">+50</button>
+								<button data-quantity-button="100" type="button" class="actions-game-rates__input-button ">+100</button>
+								<button data-quantity-button="200" type="button" class="actions-game-rates__input-button ">+200</button>
+								<button data-quantity-button="500" type="button" class="actions-game-rates__input-button ">+500</button>
+								<button data-quantity-button="1000" type="button" class="actions-game-rates__input-button ">+1000</button>
+							</div>
+							<button class="actions-game-rates__button" id='but_bet_1'>
+									<div id='but_bet_1_caption' class='bet_but_text'>ставка</div>
+									<span id='but_bet_1_loader'><img src='img/loader.png'/></span>
+							</button>
+						</div>
+						
+						<div id='future_stake_1' class="actions-game__top actions-game-rates">
+							<div class="actions-game-rates__your-rate">
+								Ваша ставка:  <span><span id='future_bet_span_1' > </span> <span class="user_currency">RUB</span></span>
+							</div>
+							<button class="actions-game-rates__button actions-game-rates__button_cancel" id='but_cancel_1'>
+								<div id='' class='cancel_but_text'>отменить</div>
+							</button>
+						</div>
+						
+						<div id='stake_made_1' class="actions-game__top actions-game-rates">
+							<div class="actions-game-rates__your-rate">
+								Ваша ставка: <span><span id='bet_span_1' > </span> <span class="user_currency">RUB</span></span>
+							</div>
+							<div class="actions-game-rates__button " style='background: #93c1e4; display: block;' >
+								<div style='padding-top: 5px' align=center>
+									<img src="img/wait_for_game.svg@2" alt='wait' height=12 />
+								</div>
+								
+								<div style='font-size: 11px; padding-top: 7px; text-align: center'>Ожидание запуска</div>
+							</div>
+						</div>
+						
+						
+							<button type="button" id='cashout_1' class="actions-game__top actions-game-cashout">
+								<div class="actions-game-cashout__info" style='width: 220px'>
+									<div class="actions-game-cashout__info-coef">X<span class='now_x'> </span></div>
+									<div class="actions-game-cashout__info-sum"><span id='my_win_1'> </span> <span class="user_currency">RUB</span>  </div>
+								</div>
+								<div class="actions-game-cashout__text" style='width: 140px'>Кешаут</div>
+							</button>
+							
+						
+						<div id='super_game_1' class="actions-game__top actions-game-cashout" style='background:url(img/super_bottom_bg.svg)'>
+							<div class="actions-game-cashout__info" align=right style='position: absolute; right: 40px; top: 10px;'>
+								<div class="actions-game-cashout__info-coef">Ваш выигрыш:</div>
+								<div class="actions-game-cashout__info-sum"><span id='my_win_super_1'> </span> <span class="user_currency">RUB</span> </div>
+							</div>
+							<div style='position: absolute; left: 20px; top: 5px; color: #fff; font-size: 4rem; text-shadow: 1px 1px 12px #000; text-shadow: 1px 1px 2px #fff; font-weight: bold; ' id='super_game_X_dispay_1'> X55 </div>
+						</div>
+						
+						
+						
+						<div class="actions-game__bottom actions-game-rates">
+							<div class="actions-game-rates__settings">
+								<div class="checkbox checkbox_1">
+									Автокешаут
+									<input class='checkbox__input' type="checkbox" name="checkbox1" id='avtocash_1'/>
+								</div>
+								<div data-quantity class="quantity">
+									<button id='avtocash_1_minus'  type="button" class="quantity__button quantity__button_minus">-</button>
+									<div class="quantity__input">
+										<input onkeyup="this.value = this.value.replace(/[^\d,.]/g, '');" id='avtocash_field_1' inputmode="decimal" data-quantity-value autocomplete="off" type="text" class="input" name="form[]" value="2">
+									</div>
+									<button id='avtocash_1_plus'  type="button" class="quantity__button  quantity__button_plus">+</button>
+								</div>
+							</div>
+							<div class="checkbox checkbox_blue checkbox_2">
+								Автоставка
+								<input class='checkbox__input' type="checkbox" name="checkbox2" id='avtoplay_1'/>
+							</div>
+						</div>
+					</div>
+				</footer>
+			</div>
+		</main>
+	</div>
+	<!-- Стили для body -->
+	<style>
+		.lock body {
+			overflow: hidden;
+			touch-action: none;
+			overscroll-behavior: none;
+		}
+
+		.loading body {
+			opacity: 0;
+			visibility: hidden;
+		}
+
+		.loaded body {
+			transition: opacity 0.5s ease 0s;
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.turn-to-portrait {
+			pointer-events: none;
+			z-index: 200;
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background: #fff;
+			font-size: 3rem;
+			padding: 20px;
+			opacity: 0;
+			visibility: hidden;
+			transform: scale(0);
+			transition: all 0.3s ease 0s;
+			color: #000;
+			font-family: Arial;
+		}
+
+		@media screen and (orientation: landscape) and (max-height: 374px) {
+			.turn-to-portrait.show {
+				opacity: 1;
+				visibility: visible;
+				transform: scale(1);
+			}
+		}
+	</style>
+	<div id="fls-preloader">
+		<!-- Стили для прелоадера -->
+		<style>
+			* {
+				padding: 0px;
+				margin: 0px;
+				border: 0px;
+			}
+
+			*,
+			*:before,
+			*:after {
+				box-sizing: border-box;
+			}
+
+			/* Главный блок */
+			.fls-preloader {
+				pointer-events: none;
+				z-index: -1;
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background: #fff;
+			}
+
+			/* Блок с элементами */
+			.fls-preloader__body {
+				padding: 0.93rem;
+				max-width: 31.25rem;
+				display: flex;
+				flex-direction: column;
+			}
+
+			/* Блок с счетчиком */
+			.fls-preloader__counter {
+				font-size: 4rem;
+				color: #000;
+				font-family: Arial;
+			}
+
+			/* Прогресбар */
+			.fls-preloader__line {}
+
+			/* Линия прогресбара */
+			.fls-preloader__line span {
+				display: inline-block;
+				transition: width 0.2s ease;
+				height: 0.8rem;
+				background-color: #2fa7da;
+			}
+		</style>
+		<!-- Скрипт прелоадера -->
+		<script>
+			function preloader() {
+				const preloaderImages = document.querySelector('[data-preloader]') ? document.querySelectorAll('[data-preloader] img') : document.querySelectorAll('img');
+				const preloaderContainer = document.querySelector('#fls-preloader');
+				if (preloaderImages.length) {
+					const preloaderTemplate = `
+					<div class="fls-preloader">
+						<div class="fls-preloader__body">
+							<div class="fls-preloader__counter">0%</div>
+							<div class="fls-preloader__line"><span></span></div>
+						</div>
+					</div>`;
+					document.querySelector('html').insertAdjacentHTML("beforeend", preloaderTemplate);
+
+					const
+						preloader = document.querySelector('.fls-preloader'),
+						showPecentLoad = document.querySelector('.fls-preloader__counter'),
+						showLineLoad = document.querySelector('.fls-preloader__line span'),
+						htmlDocument = document.documentElement;
+
+					let imagesLoadedCount = counter = progress = 0;
+
+					htmlDocument.classList.add('loading');
+					htmlDocument.classList.add('lock');
+
+					preloaderImages.forEach(preloaderImage => {
+						const imgClone = document.createElement('img');
+						if (imgClone) {
+							imgClone.onload = imageLoaded;
+							imgClone.onerror = imageLoaded;
+							preloaderImage.dataset.src ? imgClone.src = preloaderImage.dataset.src : imgClone.src = preloaderImage.src;
+						}
+					});
+
+					function setValueProgress(progress) {
+						showPecentLoad ? showPecentLoad.innerText = `${progress}%` : null;
+						showLineLoad ? showLineLoad.style.width = `${progress}%` : null;
+					}
+					showPecentLoad ? setValueProgress(progress) : null;
+
+					function imageLoaded() {
+						imagesLoadedCount++;
+						progress = Math.round((100 / preloaderImages.length) * imagesLoadedCount);
+						const intervalId = setInterval(() => {
+							counter >= progress ? clearInterval(intervalId) : setValueProgress(++counter);
+							counter >= 100 ? addLoadedClass() : null;
+						}, 10);
+					}
+
+					function addLoadedClass() {
+						htmlDocument.classList.add('loaded');
+						htmlDocument.classList.remove('lock');
+						htmlDocument.classList.remove('loading');
+						setInterval(() => {
+							preloader.remove();
+							preloaderContainer.remove();
+						}, 500);
+					}
+				} else {
+					preloaderContainer.remove();
+				}
+			}
+			preloader();
+		</script>
+	</div>
+	<div class="turn-to-portrait" style='background: #040441; z-index: 1000'>
+		<img src='img/rotate_phone.svg@5'/> <br style='clear: both'/>
+		<span style='color: #fff; font-size: 17px'>Для работы игры поверните телефон</span>
+	</div>
+	
+	<script src="https://telegram.org/js/telegram-web-app.js?_v=20230630195330"></script>
+	<script src="jetgram_UI/js/app.js"></script>
+	
+
+	<style>
+.game__kef {
+    text-shadow: 0 0 0.2em #fff;
+    text-shadow: 0 0 1px #ссс;
+}
+</style>
+
+
+
+<script src='game/socket.io.js@1665863415'></script>
+<!-- <script src='/assets/game/HackTimer.min.js?1665863415'></script> -->
+<script src='game/jquery.countto.js@1665863415'></script>
+
+
+<script src="jetgram_SCREEN/dist/libs/lottie/lottie.js@1688069644"></script>
+
+
+<script src="jetgram_SCREEN/dist/jet/data.js@1688762988"></script>
+<script src="jetgram_SCREEN/dist/jet/aviator.js@1688843652"></script>
+<link rel='stylesheet' href="jetgram_SCREEN/dist/jet/style.css@1689093301.css" />
+
+<script>
+
+    const BET_MIN = 2;
+    const BET_MAX = 50000;
+
+    const USER_ID = 0;
+    const CURRENCY = 'RUB';
+
+    const TIME_WAIT = 5;
+    const msec_for_x01 = 20;
+
+    const WEBSOCKET_SERVER = 'wss://jetgram.io:5000';
+	
+    let SUPER_GAME_START = 20;
+    let SUPER_GAME_GOING = false;
+
+
+	let ticker;
+	let NOW_X = 1;
+	// свои ставки
+	let MY_BET_1 = 0;
+	let MY_BET_2 = 0;
+
+	let FUTURE_BET_1 = false;
+	let FUTURE_BET_2 = false;
+
+	let AUTOCASHOUT_1 = false;
+	let AUTOCASHOUT_2 = false;
+
+	let USERS_COUNT = 0;
+	let TOTAL_BANK = 0;
+
+	let MY_BALANCE = 1000;
+	let DEFAULT_AVATAR = '/assets/img/demo_user.png';
+
+	let NOW_STATUS = 'game_start';
+	let now_ID = '1661936';
+	let now_HASH = 'ae48d7505fb292c71c611ccd4700d208';
+
+	let STAKES_ARR = new Array();
+	
+	
+	let rewrite_NOW_X = false;
+	
+	rewrite_NOW_X = 1.28 ;
+	DEMO = false;
+	if (USER_ID == 0) {
+		DEMO = true;
+		DEMO_BALANCE = 1000;
+		MY_BALANCE = DEMO_BALANCE;
+	}
+
+
+	let LANG = 'ru';
+
+	let TEXTS = [];
+	TEXTS['ru'] = [];
+	TEXTS['ru']['waiting'] = 'Ожидание <br> запуска';
+	TEXTS['ru']['min_bet'] = 'Минимальная ставка: ';
+	TEXTS['ru']['max_bet'] = 'Макс. ставка: ';
+	TEXTS['ru']['no_balance'] = 'Недостаточно средств';
+	TEXTS['ru']['congrats'] = 'Поздравляем! ';
+	TEXTS['ru']['you_win'] = 'Выигрыш: ';
+	TEXTS['ru']['autocash_text'] = 'Автокешаут';
+	TEXTS['ru']['autoplay_text'] = 'Автоставка';
+	TEXTS['ru']['bet_but_text'] = 'ставка';
+	TEXTS['ru']['cancel_but_text'] = 'отменить';
+	TEXTS['ru']['obnal_text'] = 'ОБНАЛИЧИТЬ';
+	TEXTS['ru']['wait_launch'] = 'ожидание запуска...';
+	TEXTS['ru']['bet_made_text'] = 'СТАВКА:';
+	TEXTS['ru']['won_text'] = 'выигрыш: ';
+	TEXTS['ru']['your_bal_text'] = 'Ваш баланс:';
+	TEXTS['ru']['fairgame_text'] = 'ЧЕСТНАЯ ИГРА';
+	TEXTS['ru']['close_text'] = 'ЗАКРЫТЬ';
+	TEXTS['ru']['incorrect_bet'] = 'Ставка не распознана';
+	TEXTS['ru']['error'] = 'ОШИБКА';
+	TEXTS['ru']['how_play'] = 'Как играть?';
+
+	TEXTS['en'] = [];
+	TEXTS['en']['waiting'] = 'Waiting <br/> for launch';
+	TEXTS['en']['min_bet'] = 'Minimum bet: ';
+	TEXTS['en']['max_bet'] = 'Maximum bet: ';
+	TEXTS['en']['no_balance'] = 'Insufficient balance';
+	TEXTS['en']['congrats'] = 'Congratulations! ';
+	TEXTS['en']['you_win'] = 'You won: ';
+	TEXTS['en']['autocash_text'] = 'Auto-cashout';
+	TEXTS['en']['autoplay_text'] = 'Auto-bet';
+	TEXTS['en']['bet_but_text'] = 'BET';
+	TEXTS['en']['cancel_but_text'] = 'CANCEL';
+	TEXTS['en']['obnal_text'] = 'CASHOUT';
+	TEXTS['en']['wait_launch'] = 'waiting for start...';
+	TEXTS['en']['bet_made_text'] = 'YOUR BET:';
+	TEXTS['en']['won_text'] = 'winning: ';
+	TEXTS['en']['your_bal_text'] = 'Balance:';
+	TEXTS['en']['fairgame_text'] = 'FAIR GAME';
+	TEXTS['en']['close_text'] = 'CLOSE';
+	TEXTS['en']['incorrect_bet'] = 'incorrect bet';
+	TEXTS['en']['error'] = 'ERROR';
+	TEXTS['en']['how_play'] = 'How to play?';
+
+
+
+/*
+but_bet_1 , but_bet_2 - ID кнопок сделать ставку
+cashout_1 , cashout_2 - ID кнопок сделать кешаут
+cancel_block_1 , cancel_block_2 - ID кнопок отменить ставку
+bet_input_1, bet_input_2 - ID инпутов для ставки
+displayBetError(but_id, text) - показать ошибку в окошке ставки but_id
+displayBetSuccess(but_id, text) - показать успех  в окошке ставки but_id
+updateBalance(sum) - обновить баланс на актуальный
+
+game_finish() - игра окончена
+game_init(id) - игра создана
+game_start(id) - игра идет
+new_stake(id) - новая ставка ====
+cashout(id) - новая ставка =====
+insertNewLastGame(id , kef, animation) - добавить новую запись о завершенной игре, параметр - с анимацией или нет
+
+betSuccess(numb) - ставка сделана
+*/
+
+
+$(function() {
+
+// showPopupURL("wide", '/GAMES/aviator/page_result.php?id='+id);
+
+    // ============== BEGIN Audio settings ================
+    window.localStorage.setItem("sound", "0"); // due to browser policy the sound is disabled when the page is loaded
+
+	BG_VOLUME = 0.15; // уровень звука бекграунда
+
+    const audio_bg = new Audio("/assets/SOUND/bg.mp3?1688991196");
+    const audio_bet = new Audio("/assets/SOUND/bet.mp3?1688987628");
+    const audio_start = new Audio("/assets/SOUND/start.mp3?1676413350");
+    const audio_end = new Audio("/assets/SOUND/end.mp3?1676413350");
+    const audio_win = new Audio("/assets/SOUND/win.mp3?1688975542");
+    const audio_lose = new Audio("/assets/SOUND/lose.mp3?1688989453");
+    const audio_supergame = new Audio("/assets/SOUND/super_game.mp3?1688991202");
+    audio_bg.volume = BG_VOLUME;
+    audio_bg.loop = true;
+	
+	audio_supergame.volume = 0.15;
+    audio_supergame.loop = true;
+	
+	
+    audio_bet.volume = 0.3;
+    audio_start.volume = 0.1;
+    audio_end.volume = 0.2;
+    audio_win.volume = 0.2;
+    audio_lose.volume = 0.2;
+    // **************** END Audio settings ***************
+
+	$('.user_currency').text(CURRENCY);
+
+    const socket = io(WEBSOCKET_SERVER, {secure: true, upgrade: false, transports: ["websocket"]});
+
+
+    let aviator = Aviator();
+	// aviator.screen_init();
+	// $('.game__title').html(TEXTS[ LANG ]['waiting']);
+
+	$('.bet_but_text').html(TEXTS[ LANG ]['bet_but_text']);
+	$('.cancel_but_text').html(TEXTS[ LANG ]['cancel_but_text']);
+	$('.obnal_text').html(TEXTS[ LANG ]['obnal_text']);
+	$('.wait_launch').html(TEXTS[ LANG ]['wait_launch']);
+	$('.bet_made_text').html(TEXTS[ LANG ]['bet_made_text']);
+	$('.won_text').html(TEXTS[ LANG ]['won_text']);
+	$('.your_bal_text').html(TEXTS[ LANG ]['your_bal_text']);
+	$('.fairgame_text').html(TEXTS[ LANG ]['fairgame_text']);
+	$('.close_text').html(TEXTS[ LANG ]['close_text']);
+	$('.how_play').html(TEXTS[ LANG ]['how_play']);
+
+	//$('.autocash_text').html(TEXTS[ LANG ]['autocash_text']);
+	//$('.autoplay_text').html(TEXTS[ LANG ]['autoplay_text']);
+
+	$( '.autocash_text').prepend( TEXTS[ LANG ]['autocash_text'] );
+	$( '.autoplay_text').prepend( TEXTS[ LANG ]['autoplay_text'] );
+
+	// расставить кнопки по состоянию
+	function init_buttons() {
+
+		if (NOW_STATUS == 'start') {
+
+			$('#bet_block_1').css('display' , 'grid');
+			// $('#bet_block_2').css('display' , 'block');
+			$('#cashout_1').css('display' , 'none');
+			$('#actions_panel').removeClass('actions-game_cashout');
+			//$('#cashout_2').css('display' , 'none');
+			$('#stake_made_1').css('display' , 'none');
+			//$('#stake_made_2').css('display' , 'none');
+			$('#future_stake_1').css('display' , 'none');
+			//$('#future_stake_2').css('display' , 'none');
+			$('#super_game_1').css('display' , 'none');
+
+
+			// определить есть ли в списке ставок - своя
+			MY_BET_1 = 0 ; MY_BET_2 = 0;
+
+			for (i in STAKES_ARR) {
+				//console.log( STAKES_ARR[i]['action_id'] );
+				id = STAKES_ARR[i]['action_id'];
+				spl = id.split('_');
+				us_id = spl[0];
+				but_id = spl[1];
+				if (USER_ID == us_id) {
+					// alert(USER_ID + ' '+but_id);
+					if (but_id == 1) {
+						MY_BET_1 = STAKES_ARR[i]['amount'];
+						$('#cashout_1').css('display' , 'flex');
+						$('#actions_panel').addClass('actions-game_cashout');
+						$('#bet_block_1').css('display' , 'none');
+					}
+					if (but_id == 2) {
+						MY_BET_2 = STAKES_ARR[i]['amount'];
+						$('#cashout_2').css('display' , 'block');
+						$('#bet_block_2').css('display' , 'none');
+					}
+				}
+			}
+
+
+		}
+
+		if (NOW_STATUS == 'init') {
+
+			$('#bet_block_1').css('display' , 'grid');
+			//$('#bet_block_2').css('display' , 'block');
+			$('#cashout_1').css('display' , 'none');
+			$('#actions_panel').removeClass('actions-game_cashout');
+			//$('#cashout_2').css('display' , 'none');
+			$('#stake_made_1').css('display' , 'none');
+			//$('#stake_made_2').css('display' , 'none');
+			$('#future_stake_1').css('display' , 'none');
+			//$('#future_stake_2').css('display' , 'none');
+			$('#super_game_1').css('display' , 'none');
+
+			USERS_COUNT = 0;
+			TOTAL_BANK = 0;
+			updateUsersandBank();
+			// определить есть ли в списке ставок - своя
+			MY_BET_1 = 0 ; MY_BET_2 = 0;
+			$('.user_stake_row').each(function (el) {
+				id = $(this).attr('id');
+				spl = id.split('_');
+				user_id = spl[0];
+				but_id = spl[1];
+				if (USER_ID == user_id) {
+					if (but_id == 1) {
+						MY_BET_1 = $(this).attr('amount') ;
+						$('#stake_made_1').css('display' , 'grid');
+						$('#bet_span_1').html( Number(MY_BET_1).toFixed(2) );
+						$('#bet_block_1').css('display' , 'none');
+					}
+					if (but_id == 2) {
+						MY_BET_2 = $(this).attr('amount') ;
+						$('#stake_made_2').css('display' , 'grid');
+						$('#bet_span_2').html( Number(MY_BET_2).toFixed(2) );
+						$('#my_cancel_2').html( Number(MY_BET_2).toFixed(2) );
+						$('#bet_block_2').css('display' , 'none');
+					}
+				}
+			});
+
+			if (FUTURE_BET_1) {
+				FUTURE_BET_1 = false;
+				//$('#but_cancel_1').css('display', 'none');
+				//$('#but_bet_1').css('display', 'inline-block');
+				makeBet(1);
+			}
+			if (FUTURE_BET_2) {
+				FUTURE_BET_2 = false;
+				//$('#but_cancel_2').css('display', 'none');
+				//$('#but_bet_2').css('display', 'inline-block');
+				makeBet(2);
+			}
+
+			// автоигра
+			if ($('#avtoplay_1').is(':checked')) makeBet(1);
+			if ($('#avtoplay_2').is(':checked')) makeBet(2);
+
+
+		}
+
+
+		if (NOW_STATUS == 'finish') {
+
+			$('#bet_block_1').css('display' , 'grid');
+			//$('#bet_block_2').css('display' , 'block');
+
+			$('#cashout_1').css('display' , 'none');
+			$('#actions_panel').removeClass('actions-game_cashout');
+			
+			//$('#cashout_2').css('display' , 'none');
+			$('#stake_made_1').css('display' , 'none');
+			//$('#stake_made_2').css('display' , 'none');
+			$('#future_stake_1').css('display' , 'none');
+			//$('#future_stake_2').css('display' , 'none');
+
+			if (FUTURE_BET_1) {
+				$('#bet_block_1').css('display' , 'none');
+				$('#future_stake_1').css('display' , 'grid');
+			}
+			if (FUTURE_BET_2) {
+				$('#bet_block_2').css('display' , 'none');
+				$('#future_stake_2').css('display' , 'grid');
+			}
+
+			//$('#bet_input_1').removeAttr('disabled');
+			//$('#bet_input_2').removeAttr('disabled');
+		}
+
+
+		$('#but_bet_1_loader').css('display', 'none');
+		$('#but_bet_2_loader').css('display', 'none');
+	}
+
+	init_buttons();
+
+	function setNowHash(newHash) {
+		$('.now_HASH').attr('copy_val' , newHash);
+		shortH = newHash.substr(0, 8)+'...'+newHash.substr(-10, 10);
+		$('.now_HASH').html( shortH);
+	}
+
+
+	$('.now_ID').html(now_ID);
+	setNowHash(now_HASH);
+
+
+	function processEvent(action, action_id, amount=0, photo='', add_info='', currency = 'EUR')  {
+		// alert(action+ ' '+action_id);
+        if (action == 'game_finish') {
+			NOW_STATUS = 'finish';
+			insertNewLastGame(action_id , add_info, true); // add_info - финальный коэфициент
+			game_finish(add_info);
+			init_buttons();
+			STAKES_ARR = [];
+			// cancelFutureBet(1);
+			// cancelFutureBet(2);
+		}
+        if (action == 'game_init') {
+			NOW_STATUS = 'init';
+			game_init(action_id);
+			// for (i in STAKES_ARR) new_stake(STAKES_ARR[i]['action_id'], STAKES_ARR[i]['amount'], STAKES_ARR[i]['photo'], STAKES_ARR[i]['add_info']);
+			// STAKES_ARR = [];
+			init_buttons();
+			$('.now_ID').html(action_id);
+			setNowHash(add_info);
+		}
+        if (action == 'game_start') {
+			NOW_STATUS = 'start';
+			game_start(action_id);
+			init_buttons();
+
+		}
+
+        if (action == 'NOW_X') {
+			// console.log('NOW_X: '+add_info);
+			if (NOW_STATUS != 'start') return;
+			NOW_X = Number(add_info);
+		}
+
+        if (action == 'user_stake') {
+			//if (NOW_STATUS == 'init') new_stake(action_id, amount, photo, add_info);
+			//else STAKES_ARR.push( { 'action_id': action_id, 'amount': amount, 'photo' : photo , 'add_info' : add_info } );
+			new_stake(action_id, amount, currency , photo, add_info);
+
+		}
+        if (action == 'user_cashout') cashout(action_id, amount, add_info);
+
+        if (action == 'cancel_stake') $('#'+action_id).remove();
+    }
+
+	socket.on("gameState", processEvent);
+
+
+	socket.on('disconnect', function() {
+		$("#connect_status").css('background-color' , '#f00');
+        $('#connection_lost').css('display' , 'block');
+		
+		/*
+		aviator.disconnect();
+		clearInterval(ticker);
+		NOW_X = 1;
+		$('#show_kef').text('---');
+		$('#game_state').text('Дисконнект -  между нами мариванна');
+		*/
+	});
+
+
+	socket.on('connect', function() {
+        // $('#connection_lost').css('display' , 'none');
+		// $("#connect_status").css('background-color' , '#0f0');
+	});
+
+
+	processEvent( NOW_STATUS , now_ID );
+
+
+
+	$('#but_cancel_1').click(function() { cancelFutureBet(1) } );
+	$('#but_cancel_2').click(function() { cancelFutureBet(2) } );
+
+	function cancelFutureBet(but_numb) {
+		Telegram.WebApp.HapticFeedback.impactOccurred('heavy');;
+        sound_play_bet();
+
+        if (but_numb==1) FUTURE_BET_1 = false;
+        if (but_numb==2) FUTURE_BET_2 = false;
+        //$('#but_bet_'+but_numb).css('display', 'inline-block');
+        //$('#but_cancel_'+but_numb).css('display', 'none');
+
+        $('#bet_block_'+but_numb).css('display', 'grid');
+        $('#future_stake_'+but_numb).css('display', 'none');
+		// alert(but_numb);
+        //$('#bet_panel_'+but_numb).css('opacity', '1');
+        //$('#bet_input_'+but_numb).removeAttr('disabled');
+	}
+
+	$('#but_bet_1').click(function() { makeBet(1) } );
+	$('#but_bet_2').click(function() { makeBet(2) } );
+
+
+	$('#bet_input_1').keydown(function(event){
+		if (event.which == 13)makeBet(1);
+	});
+	$('#bet_input_2').keydown(function(event){
+		if (event.which == 13)makeBet(2);
+	});
+	
+	function anim(el) {
+		console.log( $(el) );
+        $(el).removeClass("animate");
+        $(el).addClass("animate");
+        setTimeout((function() {
+           $(el).removeClass("animate");
+        }), 700);
+		
+        // e.stopPropagation();
+	}
+	
+	// setInterval(function() {  anim('#but_bet_1')  } , 2500) ;
+	
+	function makeBet(but_numb) {
+		
+        sound_play_bet();
+		// alert(but_numb);
+		stake = $('#bet_input_'+but_numb).val();
+		stake = stake.replace(",",".");
+		stake = Number(stake);
+		stake = stake.toFixed(2);
+
+		if (isNaN(stake)) {
+			displayBetError(but_numb, TEXTS[ LANG ]['incorrect_bet']);
+			return;
+		}
+
+		$('#future_bet_span_'+but_numb).text( stake );
+		
+		// anim('#but_bet_1');
+		Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+		
+		if (DEMO) {
+			if (stake<BET_MIN) {
+				displayBetError(but_numb, TEXTS[ LANG ]['min_bet'] + BET_MIN + ' '+CURRENCY);
+				return;
+			}
+
+			if (stake > DEMO_BALANCE) {
+				displayBetError(but_numb, TEXTS[ LANG ]['no_balance'] );
+				cancelFutureBet(but_numb);
+			} else {
+				// если сейчас идет заправка
+				if (NOW_STATUS == 'init') {
+					if (but_numb == 1) MY_BET_1 = stake;
+					if (but_numb == 2) MY_BET_2 = stake;
+					ITS_YOU = '[ЭТО ВЫ]';
+					if (LANG != 'ru') ITS_YOU = "[IT'S YOU]";
+					new_stake('0_'+but_numb, stake, CURRENCY , '' , '[ЭТО ВЫ]');
+					// подсветим
+					$('#0_'+but_numb).css('border', '1px solid #ff9e00');
+
+					updateBalance(DEMO_BALANCE - stake);
+					betSuccess(but_numb);
+					$('#my_cancel_'+but_numb).html( stake );
+				} else {
+					$('#bet_block_'+but_numb).css('display', 'none');
+					// $('#but_cancel_'+but_numb).css('display', 'block');
+					//$('#bet_panel_'+but_numb).css('opacity', '0.8');
+					//$('#bet_input_'+but_numb).attr('disabled', '1');
+					$('#future_stake_'+but_numb).css('display', 'grid');
+					if (but_numb==1) FUTURE_BET_1 = true;
+					if (but_numb==2) FUTURE_BET_2 = true;
+				}
+			}
+			return;
+		} else {
+
+			if (stake<BET_MIN) {
+				displayBetError(but_numb, TEXTS[ LANG ]['min_bet'] + BET_MIN + ' '+CURRENCY);
+				return;
+			}
+			if (stake>BET_MAX) {
+				displayBetError(but_numb, TEXTS[ LANG ]['max_bet'] + BET_MAX + ' '+CURRENCY);
+				return;
+			}
+
+		}
+
+		// если сейчас не идет заправка
+		if (NOW_STATUS != 'init') {
+			$('#bet_block_'+but_numb).css('display', 'none');
+			// $('#but_cancel_'+but_numb).css('display', 'block');
+			//$('#bet_panel_'+but_numb).css('opacity', '0.8');
+			//$('#bet_input_'+but_numb).attr('disabled', '1');
+
+			$('#future_stake_'+but_numb).css('display', 'grid');
+			if (but_numb==1) FUTURE_BET_1 = true;
+			if (but_numb==2) FUTURE_BET_2 = true;
+
+			return;
+		}
+
+
+		$('#but_bet_'+but_numb+'_caption').css('display', 'none');
+		$('#but_bet_'+but_numb+'_loader').css('display', 'block');
+
+
+				$.ajax({
+				  url: '/AJAX/aviator.php',
+					cache: false,
+					dataType: 'json',
+					type: "POST",
+					data: { 'action': 'makeBet', 'stake': stake, 'but_numb' : but_numb },
+					  success: function(res) {
+							$('#but_bet_'+but_numb+'_caption').css('display', 'block');
+							$('#but_bet_'+but_numb+'_loader').css('display', 'none');
+						  if (res['status'] == 'error') displayBetError(but_numb, res['desc']);
+						  if (res['status'] == 'OK') {
+							  if (but_numb == 1) MY_BET_1 = Number(res['real_stake']);
+							  if (but_numb == 2) MY_BET_2 = Number(res['real_stake']);
+							  //displayBetSuccess(but_numb , 'СТАВКА ПРИНЯТА!' );
+							  betSuccess(but_numb);
+								// $('#my_cancel_'+but_numb).html( Number(res['real_stake']).toFixed(2) );
+						  }
+						  //if (res['new_balance']) updateBalance(res['new_balance']);
+						  if (res['new_balance'] != undefined ) updateBalance(res['new_balance']);
+					  }
+				});
+	}
+
+
+	$('#cashout_but_1, #cashout_1').click(function() { makeCashout(1) } );
+	$('#cashout_but_2, #cashout_2').click(function() { makeCashout(2) } );
+
+	function makeCashout(but_numb) {
+        sound_play_bet();
+		Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+		if (DEMO) {
+			if (but_numb == 1) sum = $('#my_win_1').html();
+			if (but_numb == 2) sum = $('#my_win_2').html();
+			if (but_numb == 1) MY_BET_1 = 0;
+			if (but_numb == 2) MY_BET_2 = 0;
+
+			sum = parseFloat(sum);
+			betCashouted(but_numb, sum);
+			displayBetSuccess(but_numb , TEXTS[ LANG ]['you_win'] + CURRENCY +' '+sum );
+			updateBalance(DEMO_BALANCE + sum);
+			cashout('0_'+but_numb , sum , NOW_X.toFixed(2) );
+			return;
+		}
+		
+		AUTOCASHOUT_OPTION = 0;
+		if (but_numb==1) AUTOCASHOUT_OPTION = AUTOCASHOUT_1;
+		if (but_numb==2) AUTOCASHOUT_OPTION = AUTOCASHOUT_2;
+		
+		
+				$.ajax({
+				  url: '/AJAX/aviator.php',
+					cache: false,
+					dataType: 'json',
+					type: "POST",
+					data: { 'action': 'makeCashout', 'but_numb' : but_numb , 'AUTOCASHOUT_OPTION' : AUTOCASHOUT_OPTION },
+					  success: function(res) {
+
+						  if (res['status'] == 'error') displayBetError(but_numb, res['desc']);
+						  if (res['status'] == 'OK') {
+							  if (but_numb == 1) MY_BET_1 = 0;
+							  if (but_numb == 2) MY_BET_2 = 0;
+							  betCashouted(but_numb, res['sum_won']);
+								displayBetSuccess(but_numb , TEXTS[ LANG ]['you_win']+ res['sum_won'] + ' '+CURRENCY);
+						  }
+						  // if (res['new_balance']) updateBalance(res['new_balance']);
+						  if (res['new_balance'] != undefined ) updateBalance(res['new_balance']);
+					  }
+				});
+	}
+
+
+	$('#cancel_but_1').click(function() { makeCancel(1) } );
+	$('#cancel_but_2').click(function() { makeCancel(2) } );
+
+	function makeCancel(but_numb) {
+				$.ajax({
+				  url: '/AJAX/aviator.php',
+					cache: false,
+					dataType: 'json',
+					type: "POST",
+					data: { 'action': 'makeCancel', 'but_numb' : but_numb },
+					  success: function(res) {
+
+						  if (res['status'] == 'error') displayBetError(but_numb, res['desc']);
+						  if (res['status'] == 'OK') {
+							  displayBetError(but_numb, 'ставка вернулась');
+							  betCanceled(but_numb);
+						  }
+						  if (res['new_balance']) updateBalance(res['new_balance']);
+					  }
+				});
+	}
+
+
+
+
+
+
+
+	function game_finish( final_kef ) {
+		aviator.screen_game_failed(final_kef);
+		
+		if (SUPER_GAME_GOING) sound_stop_supergame();
+		
+		clearInterval(ticker);
+		NOW_X = final_kef;
+		aviator.$kef.text( final_kef + 'X');
+		
+		$('#show_kef').text('---');
+		//$('#game_state').text('игра окончена');
+		$('#but_bet_1').css( 'display' , 'inline-block' );
+		$('#but_bet_2').css( 'display' , 'inline-block' );
+		$('#stake_made_1').css( 'display' , 'none' );
+		$('#stake_made_2').css( 'display' , 'none' );
+		$('#super_game_1').css('display' , 'none');
+
+        sound_play_end();
+		
+		// если участвовали в супер-игре
+		console.log('game_finish ' + SUPER_GAME_GOING+' '+MY_BET_1);
+		if (SUPER_GAME_GOING && MY_BET_1 > 0) {
+			betCashouted(1 , (MY_BET_1 *final_kef).toFixed(2) );
+			
+			if (DEMO) updateBalance(DEMO_BALANCE + (MY_BET_1 *final_kef) );
+			else getActualBalance();
+		} 
+
+		if (!SUPER_GAME_GOING && MY_BET_1 > 0) {
+			if (MY_BET_1>0) sound_play_lose();
+		}
+	};
+
+	function game_init(id) {
+		aviator.screen_game_restart(TIME_WAIT);
+
+		NOW_X = 1;
+		$('#js-stake-list').html('');
+		//$('#game_state').text('Запраавка ракеты #'+id);
+	};
+
+	var PROPUSK = true;
+	var SUPER_OLD_X = 0;
+
+	function game_tick() {
+		//str = Math.round(NOW_X*100) /100;
+
+		if (NOW_X <=2) {
+			PROPUSK = !PROPUSK;
+			if (PROPUSK) return;
+		}
+
+		str = NOW_X.toFixed(2);
+
+		$('#show_kef').html( str );
+		$('.now_x').html( str );
+		
+		aviator.$kef.text(str + 'X');
+		
+		if (MY_BET_1 > 0) {
+			$('#my_win_1').html( (NOW_X*MY_BET_1).toFixed(2) );
+			if ($('#avtocash_1').is(':checked')) AUTOCASHOUT_1 = Number( $('#avtocash_field_1').val() );
+			else AUTOCASHOUT_1 = false;
+			if (AUTOCASHOUT_1 && AUTOCASHOUT_1 <= NOW_X) {
+				MY_BET_1 = 0;
+				makeCashout(1);
+			}
+		}
+
+		if (MY_BET_2 > 0) {
+			$('#my_win_2').html( (NOW_X*MY_BET_2).toFixed(2) );
+			if ($('#avtocash_2').is(':checked')) AUTOCASHOUT_2 = Number( $('#avtocash_field_2').val() );
+			else AUTOCASHOUT_2 = false;
+			if (AUTOCASHOUT_2 && AUTOCASHOUT_2 <= NOW_X) {
+				MY_BET_2 = 0;
+				makeCashout(2);
+			}
+		}
+		
+		if (NOW_X <=2) NOW_X+= 0.005;
+		else NOW_X+= 0.01;
+		
+		if (NOW_X >= 5) NOW_X += 0.01;
+		
+		
+		//MY_BET_1 = 10;
+		//SUPER_GAME_START = 1.5;
+		
+		if (!SUPER_GAME_GOING) {
+			if (NOW_X >= SUPER_GAME_START ) {
+				// запуск супер-игры
+				SUPER_GAME_GOING = true;
+				if (MY_BET_1 > 0) i_play = true;
+				else i_play = false;
+				startSupergame( i_play );
+			}
+		}
+		
+		if (SUPER_GAME_GOING) {
+			swin_sum = NOW_X*MY_BET_1;
+			if (swin_sum < 300) $('#my_win_super_1').html( swin_sum.toFixed(2) );
+			else $('#my_win_super_1').html( swin_sum.toFixed() );
+			
+			floor_NOW_X = Math.floor(NOW_X);
+			if (floor_NOW_X != SUPER_OLD_X) superGame_splash(floor_NOW_X);
+			SUPER_OLD_X = floor_NOW_X;
+		}
+	}
+	
+	function startSupergame( i_play ) {
+		sound_play_supergame();
+		aviator.screen_game_supergame();
+		
+		
+		 if (!document.hidden) {
+			 
+			$('.user_stake_row').each(function(el) {
+				if( $(this).attr("won_sum") ) $(this).slideUp( 1000 );
+			});
+			
+			 $('#aviator_above').fadeIn(30).delay(10).fadeIn(50).fadeIn(40).delay(10).fadeIn(40).delay(10).fadeIn(50).fadeOut(10).delay(10).fadeIn(75).fadeOut(10).delay(10).fadeIn(75).fadeOut(10).delay(5).fadeIn(30).fadeOut(50).fadeIn(40).fadeOut(10);
+		 }
+		 
+		if (i_play) {
+			$('#bet_block_1').css('display' , 'none');
+			$('#cashout_1').css('display' , 'none');
+			$('#super_game_1').css('display' , 'flex');
+		}
+	}
+	// setTimeout(function() {  startSupergame (false)  }  , 2300);
+	
+	
+	function superGame_splash(ceil_NOW_X) {
+		$('#super_game_X_dispay_1').text('X' + ceil_NOW_X);
+		$('#super_game_X_dispay_1').css('display' , 'block');
+		// $('#super_game_X_dispay_1').fadeOut( 500 );
+		$('#super_game_X_dispay_1').css('opacity' , '0.35' );
+		$('#super_game_X_dispay_1').css('left' , '65px' );
+		$('#super_game_X_dispay_1').animate({'opacity': '1'} , 220).animate({'left': '250px' , 'opacity': '0'} , 300);
+		
+	}
+	
+
+	function game_start(id) {
+		// $('#game_state').text('ЛЕТИИИТ РАКЕТА #'+id);
+		// $('#show_kef')  msec_for_x01
+        aviator.screen_game_start();
+		clearInterval(ticker);
+		NOW_X = 1;
+		if (rewrite_NOW_X) {
+			NOW_X = rewrite_NOW_X;
+			rewrite_NOW_X = false;
+		}
+		SUPER_GAME_GOING = false;
+		ticker = setInterval(game_tick  , msec_for_x01);
+		game_tick();
+
+        sound_play_start();
+	};
+
+	function new_stake(action_id, amount, currency , photo, screen_name , win_sum=0 , win_kef=0) {
+		// console.log('new_stake '+action_id);
+		// if (win_sum > 0) return;
+		if (photo=='') photo = DEFAULT_AVATAR;
+		amount = Number(amount).toFixed(2);
+		if (amount >= 30 ) amount = Math.floor(amount);
+		STAKES_ARR.push( { 'action_id': action_id, 'amount': amount, 'photo' : photo  } );
+
+		// return;
+
+		if ($('#'+action_id).length > 0) return;
+
+		tr = '<li id="'+action_id+'" class="del_after_finish game-player user_stake_row" amount="'+amount+'" currency="'+currency+'">';
+		
+		tr += '<div class="game-player__avatar"><img src="https://jetgram.io/GAME_ENGINE/'+photo+'" alt="" style="border-radius: 50%" /></div>';
+		tr += '<div class="game-player__body">';
+			tr += '<div class="game-player__body">';
+				tr += '<div class="game-player__name">'+screen_name+'</div>';
+				tr += '<div class="game-player__info">';
+					tr += '<div class="game-player__rate-sum">'+amount+' р.</div>';
+					tr += '<div class="game-player__coefficient" style="display: none; height: 0.92rem; margin-top: 0.12rem">-</div>';
+				tr += '</div>';
+			tr += '</div>';
+		tr += '</div>';
+		tr += '</li>';
+		
+		tr += '</div>';
+
+
+        $("#js-stake-list").append(tr);
+
+		if ( Number( action_id.split('_')[0] ) == USER_ID) {
+			$('#'+action_id).css('border', '1px solid #ff9e00');
+			console.log(action_id);
+		}
+		if (win_sum > 0) cashout(action_id , win_sum , win_kef);
+		USERS_COUNT++;
+		TOTAL_BANK += parseFloat(amount);
+		updateUsersandBank();
+		
+			}
+
+
+	function cashout(action_id, amount, kef) {
+		// alert(action_id);
+		if (amount > 1000) amount = Math.floor(amount);
+		// kef = '12.33';
+		$('#'+action_id).find('.game-player__coefficient').html('X'+kef);
+		$('#'+action_id).find('.game-player__coefficient').css('display', 'flex');
+		$('#'+action_id).addClass('game-player_winner');
+
+		// $('#'+action_id).find('.js-sum').html('<span style="  font-weight:bold">' +amount + '</span> <br/>' + $('#'+action_id).attr('currency') );
+		//$('#'+action_id).find('.js-sum').removeClass('user-card__void');
+		//$('#'+action_id).find('.js-sum').addClass('user-card__amount');
+		$('#'+action_id).attr('won_sum' , amount);
+
+		// $('#'+action_id).find('.win_div').html( '&nbsp;&nbsp;🏆 '+ $('#'+action_id).find('.sum_div').html()  );
+		$('#'+action_id).find('.game-player__rate-sum').html(  amount + ' р.'  );
+		// $('#'+action_id).find('.sum_div').css('color' , '#ff9e00');
+
+		$('#'+action_id).addClass('user-card--win');
+	}
+	
+	function getActualBalance() {
+				$.ajax({
+				  url: '/AJAX/aviator.php',
+					cache: false,
+					dataType: 'json',
+					type: "POST",
+					data: { 'action': 'getActualBalance' },
+					  success: function(res) {
+						  // if (res['new_balance']) updateBalance(res['new_balance']);
+						  if (res['new_balance'] != undefined ) updateBalance(res['new_balance']);
+					  }
+				});
+	}
+
+
+	function updateUsersandBank() {
+		$('#TOTAL_USERS').html(USERS_COUNT);
+		$('#TOTAL_BANK').html(TOTAL_BANK.toFixed(2));
+	};
+
+
+	function displayBetError(but_numb, t) {
+		console.log(t);
+		showNotification( TEXTS[ LANG ]['error'] , t , 'error');
+	}
+	
+	function displayBetSuccess(but_numb , t) {
+		$('#text_success_but_'+but_numb).html( t );
+		$('#text_success_but_'+but_numb).css( 'display' , 'block' );
+		setTimeout( function() {$('#text_success_but_'+but_numb).slideUp(); } , 2000 );
+	}
+	// displayBetSuccess(1 );
+
+
+	function betSuccess(but_numb) {
+		//$('#my_cancel_1').html( Number(MY_BET_1).toFixed(2) );
+		//$('#my_cancel_2').html( Number(MY_BET_2).toFixed(2) );
+		// alert('betSuccess');
+		$('#bet_block_'+but_numb).css( 'display' , 'none' );
+		$('#stake_made_'+but_numb).css( 'display' , 'grid' );
+		$('#bet_panel_'+but_numb).css('opacity', '1');
+		if (but_numb==1) $('#bet_span_1').html( MY_BET_1 );
+		if (but_numb==2) $('#bet_span_2').html( MY_BET_2 );
+	}
+
+	function betCanceled(but_numb) {
+		$('#cancel_block_'+but_numb).css( 'display' , 'none' );
+		$('#bet_block_'+but_numb).css( 'display' , 'grid' );
+	}
+
+	function betCashouted(but_numb , win_sum) {
+		$('#cashout_'+but_numb).css( 'display' , 'none' );
+		$('#actions_panel').removeClass('actions-game_cashout');
+		$('#bet_block_'+but_numb).css( 'display' , 'grid' );
+		
+		sound_play_win();
+		
+		/*
+		$('#win_window_'+but_numb).css( 'display' , 'block' );
+		$('#win_sum_'+but_numb).html( win_sum );
+
+		setTimeout( function() {
+			$('#bet_block_'+but_numb).css( 'display' , 'flex' );
+			$('#bet_input_'+but_numb).removeAttr('disabled');
+			$('#win_window_'+but_numb).css( 'display' , 'none' );
+		}, 1000);
+		*/
+		showNotification( TEXTS[ LANG ]['congrats'] , TEXTS[ LANG ]['you_win'] +win_sum + ' '+CURRENCY  , 'success');
+	}
+
+
+
+
+	function updateBalance(new_bal) {
+		console.log(new_bal);
+		new_bal = Number(new_bal);
+		OLD_BALANCE = MY_BALANCE;
+		MY_BALANCE = Number(new_bal);
+		if (DEMO) DEMO_BALANCE = new_bal;
+		balanceHtml = $('.user_balance');
+        balanceHtml.countTo({
+            // from: parseFloat(balanceHtml.text()),
+            from: parseFloat( OLD_BALANCE ),
+            to: new_bal,
+            speed: 450,
+            refreshInterval: 30,
+            formatter: function (value, options) {
+                if (value <= 0) value = 0;
+				//value = formatNumber( value );
+				//return value;
+                return formatNumber (value.toFixed(2) );
+            }
+        });
+    }
+
+	updateBalance(MY_BALANCE);
+
+
+    function insertNewLastGame(id , kef, animation) {
+        if ($('.last-coefficient').length > 20) {
+            $('.last-coefficient:last-child').remove();
+        }
+		kef = Number(kef).toFixed(2);
+		cl_css = 'last-games__item_smallcoef';
+		if (kef > 3) cl_css = 'last-games__item_medcoef';
+		if (kef > 15) cl_css = 'last-games__item_bigcoef';
+        //str = '<div id="l_g_'+id+'" class="cell '+cl_css+'"><nobr><a href="https://jetgram.io/game/aviator/result/'+id+'" target="_blank"> '+kef+'X</a></nobr></div>';
+        str = '<div id="l_g_'+id+'" game_id='+id+' class="last-coefficient last-games__item '+cl_css+'">'+kef+'X</div>';
+
+        $(".js-last-coefficients").prepend(str);
+
+
+		if (animation) {
+			el = $('#l_g_'+id);
+			el.show("slide", { direction: "right" }, 1000);
+			el.fadeOut(100);
+			el.fadeIn(100);
+			el.fadeOut(150);
+			el.fadeIn(150);
+			el.fadeOut(200);
+			el.fadeIn(400);
+		}
+
+		add_game_info_handler( '#l_g_'+id );
+
+    };
+
+
+
+	// BET_MIN BET_MAX
+
+	$('.btn-coe , .btn-count').click(function(el) {
+		//field = $(this).attr('field');
+		//if (field == undefined) return;
+		
+		field = 1;
+		
+		if (field == '1' && FUTURE_BET_1) return;
+		if (field == '2' && FUTURE_BET_2) return;
+
+		if (field == '1') f = $('#bet_input_1');
+		else f = $('#bet_input_2');
+
+		val = $(this).attr('value');
+
+		if (val == 'MAX') {
+			nb = MY_BALANCE;
+			if (nb>BET_MAX) nb = BET_MAX;
+			f.val(nb);
+			return;
+		}
+
+		val = Number(val);
+		// alert(val);
+
+
+		st = Number(f.val());
+		if (isNaN(st)) {
+			f.val(BET_MIN);
+			return;
+		}
+		//alert(st);
+
+		st += val;
+		st = st.toFixed(2);
+		if (st>BET_MAX) st = BET_MAX;
+		if (st<BET_MIN) st = BET_MIN;
+		st = f.val(st);
+	});
+
+
+	$('#avtocash_field_1 , #avtocash_field_2').on('keyup' , function() {
+		v = $(this).val();
+		v = v.replace(',', '.');
+		v = v.replace(/[^\d.]/ig, '');
+		//v = parseFloat(v);
+		//if (isNaN(v)) v = 3;
+		if (v != '') {
+			if (v < 1) v = 1 ;
+			if (v > 30) v = 30 ;
+		}
+		$(this).val(v);
+		// alert(v);
+	});
+
+	$('#avtocash_1 , #avtocash_2').on('change' , function() {
+		f = $(this).attr('field');
+		// alert(f);
+		if ($(this).is(':checked')) $('#avtocash_field_'+f).addClass('autocash_active');
+		else $('#avtocash_field_'+f).removeClass('autocash_active');
+	});
+
+
+	function changeAutoCashout(numb , action) {
+		a_val = $('#avtocash_field_'+numb).val();
+		a_val = Number(a_val);
+		a_val = a_val.toFixed(2);
+		if (isNaN(a_val)) a_val = 1.1;
+
+		if (action == 'plus') a_val = Number(a_val) + 0.1;
+		else a_val -= 0.1;
+
+		if (a_val < 1.1) a_val = 1.1;
+
+		a_val = Number(a_val).toFixed(2);
+		$('#avtocash_field_'+numb).val( a_val );
+	}
+
+	$('#avtocash_1_minus').click(function() {  changeAutoCashout(1, 'minus');  });
+	$('#avtocash_1_plus').click(function() {  changeAutoCashout(1, 'plus');  });
+	$('#avtocash_2_minus').click(function() {  changeAutoCashout(2, 'minus');  });
+	$('#avtocash_2_plus').click(function() {  changeAutoCashout(2, 'plus');  });
+
+
+
+
+	/*
+	$( window ).resize(function() {
+		win_height = $( window ).height();
+		win_width = $( window ).width();
+		game_height = win_height - $('#bet_section').height();
+		console.log($( window ).height());
+		game_height -= 45;
+		$('#aviator').css('height' , game_height + 'px');
+
+	  $('#balance_window').css('top' , (game_height - 12)  + 'px');
+
+	 // $('#js-stake-list').css('height' , (game_height - 70)  + 'px');
+	  $('#js-stake-list').css('height' , win_height-66  + 'px');
+
+	  if (win_width < 640)  $('#balance_window').css('left' , '0px');
+	  else {
+		  $('#balance_window').css('left' , 'auto');
+		  $('#balance_window').css('right' , '20px');
+		  console.log(win_width);
+	  }
+	});
+
+	$( window ).resize();
+	*/
+
+
+    new_stake('80_1', 100.00 , '' , 'https://i.jetgram.io/users/img/0/8/f033ab37c30201f73f142449d037028d.jpg' , 'Afridi Za***' , 0.00 , 0.00 ); 
+new_stake('691_1', 190.00 , '' , 'https://i.jetgram.io/users/img/2/5/1/c02227e9c96749965f8d10e96c212487.jpg' , 'Hayk Ag***an' , 0.00 , 0.00 ); 
+new_stake('1313813_1', 2.82 , '' , '/assets/img/demo_user.png' , 'FN 🌴' , 0.00 , 0.00 ); 
+new_stake('733_1', 22.00 , '' , 'https://i.jetgram.io/users/img/3/3/7/6c29793a140a811d0c45ce03c1c93a28.jpg' , 'Артем Ку***ов' , 0.00 , 0.00 ); 
+new_stake('483_1', 36.00 , '' , 'https://i.jetgram.io/users/img/3/8/4/e1e32e235eee1f970470a3a6658dfdd5.jpg' , 'Gfa Ja**' , 0.00 , 0.00 ); 
+new_stake('343_1', 149.00 , '' , 'https://i.jetgram.io/users/img/3/4/3/3ad7c2ebb96fcba7cda0cf54a2e802f5.jpg' , 'Абу Ба***' , 0.00 , 0.00 ); 
+new_stake('142_1', 2100.00 , '' , 'https://i.jetgram.io/users/img/2/4/1/a8baa56554f96369ab93e4f3bb068c22.jpg' , 'Дамир Га***ов' , 0.00 , 0.00 ); 
+new_stake('463_1', 184.00 , '' , 'https://i.jetgram.io/users/img/3/6/4/428fca9bc1921c25c5121f9da7815cde.jpg' , 'Dad Ja**' , 0.00 , 0.00 ); 
+new_stake('977_1', 170.00 , '' , 'https://i.jetgram.io/users/img/4/7/2/439429060dbc3e7f4a8d7495232e779f.jpg' , 'Mouâd Dr***' , 0.00 , 0.00 ); 
+new_stake('382_1', 1710.00 , '' , 'https://i.jetgram.io/users/img/2/8/3/4f6ffe13a5d75b2d6a3923922b3922e5.jpg' , 'Youss Rs***' , 0.00 , 0.00 ); 
+new_stake('186_1', 1552.00 , '' , 'https://i.jetgram.io/users/img/6/8/1/9872ed9fc22fc182d371c3e9ed316094.jpg' , 'Kami Ka**' , 0.00 , 0.00 ); 
+new_stake('990549_1', 2.00 , '' , 'https://i.jetgram.io/users/img/1/6/5/d4adc708cebfaf55f1ed351ec28c5f5c.jpg' , 'Muhammad Davlatzodaa' , 0.00 , 0.00 ); 
+new_stake('535_1', 220.00 , '' , 'https://i.jetgram.io/users/img/5/3/5/33e8075e9970de0cfea955afd4644bb2.jpg' , 'Олег Хо***' , 0.00 , 0.00 ); 
+new_stake('789_1', 26.00 , '' , 'https://i.jetgram.io/users/img/9/8/7/68053af2923e00204c3ca7c6a3150cf7.jpg' , 'Кристина Фа***ов' , 0.00 , 0.00 ); 
+insertNewLastGame( 1661916 , 1.00 , false  ); insertNewLastGame( 1661917 , 1.00 , false  ); insertNewLastGame( 1661918 , 1.70 , false  ); insertNewLastGame( 1661919 , 18.66 , false  ); insertNewLastGame( 1661920 , 1.00 , false  ); insertNewLastGame( 1661921 , 1.68 , false  ); insertNewLastGame( 1661922 , 1.00 , false  ); insertNewLastGame( 1661923 , 1.00 , false  ); insertNewLastGame( 1661924 , 1.24 , false  ); insertNewLastGame( 1661925 , 1.07 , false  ); insertNewLastGame( 1661926 , 1.35 , false  ); insertNewLastGame( 1661927 , 1.24 , false  ); insertNewLastGame( 1661928 , 3.10 , false  ); insertNewLastGame( 1661929 , 1.99 , false  ); insertNewLastGame( 1661930 , 1.24 , false  ); insertNewLastGame( 1661931 , 1.00 , false  ); insertNewLastGame( 1661932 , 1.00 , false  ); insertNewLastGame( 1661933 , 4.54 , false  ); insertNewLastGame( 1661934 , 1.00 , false  ); insertNewLastGame( 1661935 , 10.27 , false  ); 
+
+	init_buttons();
+
+
+	$('#close_FAQ').click(function() {  $('#FAQ_window').css('display', 'none')  });
+
+	$('#open_FAQ').click(function() {
+		$('#FAQ_window').css('display', 'block');
+		$('.INNER_TEXTS').css('display', 'none');
+		$('#FAQ_TEXT_'+LANG).css('display', 'block');
+	});
+
+	$('#fair_game_link').click(function() {
+		$('#FAQ_window').css('display', 'block');
+		$('.INNER_TEXTS').css('display', 'none');
+		$('#FG_TEXT_'+LANG).css('display', 'block');
+	});
+
+	function showPopupURL(q, w) {
+		
+	}
+
+	function add_game_info_handler( el ) {
+		// $('.game_info').on('click' , function() {
+
+		$( el ).on('click' , function() {
+			id = $(this).attr('game_id');
+			// alert(id);
+				$.ajax({
+				  url: '/AJAX/aviator.php',
+					cache: false,
+					dataType: 'json',
+					type: "POST",
+					data: { 'action': 'getGameInfo' , 'id': id },
+					  success: function(res) {
+						  if (res['id']) showGameInfo(res['id'] , res['date_end'], res['salt'] , res['final_kef'], res['hash']) ;
+					  }
+				});
+				
+			
+			
+			
+			return false;
+		});
+	}
+
+	// add_game_info_handler();
+	
+	let aviator_view = 'small';
+	aviator.screen_game_view( aviator_view );
+	$('.game-screen__players-btn').click(function() {
+		if (aviator_view == 'small') aviator_view = 'full';
+		else aviator_view = 'small';
+		aviator.screen_game_view( aviator_view );
+	}) ;
+
+
+	old_text = '';
+	tf_link = '';
+	$('.now_HASH').click(function() {
+		old_text = $(this).html();
+		v = $(this).attr('copy_val');
+		copy(v);
+		$(this).html('Скопировано!');
+		tf_link = $(this);
+		setTimeout(function() { $(tf_link).html( old_text ); }  , 600);
+	});
+
+	function copy(text) {
+		var input = document.createElement('input');
+		input.setAttribute('value', text);
+		document.body.appendChild(input);
+		input.select();
+		var result = document.execCommand('copy');
+		document.body.removeChild(input);
+		return result;
+	 }
+
+
+	function count_playing_time() {
+		$.ajax({
+		  url: '/AJAX/aviator.php?count_time',
+			cache: false,
+			  success: function(res) {
+				   console.log(res);
+			  }
+		});
+	}
+	setInterval(count_playing_time , 15000);
+
+	$('#reload_page').click(function() {
+		location.reload();
+	});
+
+
+
+    // =================== BEGIN Audio ========================
+    const disable_sound_btn = $('#js-disable-sound');
+
+    // onload
+    document.addEventListener('click', sound_play_onload);
+    function sound_play_onload() {
+        // if (window.localStorage.getItem("sound") === "init" || window.localStorage.getItem("sound") === "1") {
+            window.localStorage.setItem("sound", "1");
+            disable_sound_btn.removeClass('_muted');
+            audio_bg.play();
+            audio_supergame.play();
+            audio_supergame.pause();
+        // }
+        document.removeEventListener('click', sound_play_onload);
+    }
+
+    disable_sound_btn.click(function () {
+        if (window.localStorage.getItem("sound") === "1") {
+            disable_sound_btn.addClass('_muted');
+
+            window.localStorage.setItem("sound", "0");
+            audio_bg.pause();
+            audio_bet.pause();
+            audio_start.pause();
+            audio_end.pause();
+            audio_supergame.pause();
+        }
+        else {
+            disable_sound_btn.removeClass('_muted');
+            window.localStorage.setItem("sound", "1");
+            audio_bg.play();
+        }
+    });
+
+    function sound_play_bet() {
+		if (window.Telegram.WebApp.platform == 'ios') return;
+        if (window.localStorage.getItem("sound") === "1") {
+            audio_bet.currentTime = 0;
+            audio_bet.play();
+        }
+    }
+    function sound_play_start() {
+        if (window.localStorage.getItem("sound") === "1") {
+            audio_start.currentTime = 0;
+            audio_start.play();
+        }
+    }
+    function sound_play_end() {
+        if (window.localStorage.getItem("sound") === "1") {
+            audio_start.pause();
+            audio_end.currentTime = 0;
+            audio_end.play();
+        }
+    }
+    function sound_play_win() {
+        if (window.localStorage.getItem("sound") === "1") {
+            audio_win.currentTime = 0;
+            audio_win.play();
+        }
+    }
+	
+    function sound_play_lose() {
+        if (window.localStorage.getItem("sound") === "1") {
+            audio_lose.currentTime = 0;
+            audio_lose.play();
+        }
+    }
+    function sound_play_supergame() {
+        if (window.localStorage.getItem("sound") === "1") {
+			// audio_bg.volume = 0.01;
+			audio_bg.pause();
+            audio_supergame.currentTime = 0;
+            audio_supergame.play();
+        }
+    }
+    function sound_stop_supergame() {
+        if (window.localStorage.getItem("sound") === "1") {
+			// audio_bg.volume = BG_VOLUME;
+			audio_bg.currentTime = 0;
+			audio_bg.play();
+            audio_supergame.pause();
+        }
+    }
+	
+	
+    // ******************* END Audio **************************
+	
+	
+	
+    class Toast {
+        constructor(t) {
+            this._title = !1 !== t.title && (t.title || "Title"), this._text = t.text || "Message...", 
+            this._theme = t.theme || "default", this._autohide = t.autohide && !0, this._interval = +t.interval || 5e3, 
+            this._create(), this._el.addEventListener("click", (t => {
+                t.target.classList.contains("toast__close") && this._hide();
+            })), this._show();
+        }
+        _show() {
+            this._el.classList.add("toast_showing"), this._el.classList.add("toast_show"), window.setTimeout((() => {
+                this._el.classList.remove("toast_showing");
+            })), this._autohide && setTimeout((() => {
+                this._hide();
+            }), this._interval);
+        }
+        _hide() {
+            this._el.classList.add("toast_showing"), this._el.addEventListener("transitionend", (() => {
+                this._el.classList.remove("toast_showing"), this._el.classList.remove("toast_show"), 
+                this._el.remove();
+            }), {
+                once: !0
+            });
+            const t = new CustomEvent("hide.toast", {
+                detail: {
+                    target: this._el
+                }
+            });
+            document.dispatchEvent(t);
+        }
+        _create() {
+            const t = document.createElement("div");
+            t.classList.add("toast"), t.classList.add(`toast_${this._theme}`);
+            let e = '{header}<div class="toast__body"></div><button class="toast__close" type="button"></button>';
+            const s = !1 === this._title ? "" : '<div class="toast__header"></div>';
+            if (e = e.replace("{header}", s), t.innerHTML = e, this._title ? t.querySelector(".toast__header").textContent = this._title : t.classList.add("toast_message"), 
+            t.querySelector(".toast__body").textContent = this._text, this._el = t, !document.querySelector(".toast-container")) {
+                const t = document.createElement("div");
+                t.classList.add("toast-container"), document.body.append(t);
+            }
+            document.querySelector(".toast-container").append(this._el);
+        }
+    }
+    function showNotification(title, text, status) {
+        new Toast({
+            title,
+            text,
+            theme: status,
+            autohide: true,
+            interval: 4e3
+        });
+    }
+	
+		
+	function formatNumber(number) {
+	  let numString = String(number);
+
+	  // Разделяем строку на целую и десятичную части (если есть)
+	  let parts = numString.split(".");
+	  let integerPart = parts[0];
+	  let decimalPart = parts[1];
+	  
+		
+	  // Добавляем пробелы для разделения тысяч
+	  let formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+	  let formattedNumber = decimalPart ? formattedIntegerPart + "." + decimalPart : formattedIntegerPart;
+	  return formattedNumber;
+	}
+	
+})
+</script>
+
+<script>
+    (function ($) {
+        $(function () {
+            function copyToClipboard(element) {
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val(element).select();
+                document.execCommand("copy");
+                $temp.remove();
+            }
+
+            const body = $('body');
+            body.on('click', '.clipboard-button', function () {
+                const btn = $(this);
+                const txt = btn.parent().find('.clipboard-copy');
+                copyToClipboard(txt.data('copy_val'));
+                let prevTxt = txt.html();
+                txt.html('COPIED!');
+                setTimeout(function () {
+                    txt.html(prevTxt);
+                }, 1500);
+                return false;
+            });
+        });
+    })(jQuery);
+</script>
+<style>
+    .popup-game-info__title {
+        margin-bottom: .8rem;
+    }
+    .popup-game-info__table-row {
+        margin-bottom: 0.225rem;
+    }
+</style>
+
+	
+	<div style='position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 1100;  backdrop-filter: blur(4px); display: none' id='connection_lost'>
+	<div  style='position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 1000; background: #ааа; opacity: 0.2'></div>
+	<div align=center style='position: fixed; z-index: 1200; left: 50%; margin-left: -110px;'>
+	 <br/> <br/>
+		<div align=center style='background: #fff; width: 220px; padding: 20px; '>
+			<img src='img/no_connection.svg' width=150 /> 
+			<br style='clear: both'/>
+			<span style='color: #000; font-size: 17px'>
+				Потеряно соединение с сервером <br/> <br/>
+				<div id='reload_page' style='cursor: pointer; text-decoration: underline'>Нажмите чтобы перезагрузить страницу</div>
+			</span>
+		</div>
+	</div>
+		
+	</div>
+	
+	
+</body>
+
+</html>
+
